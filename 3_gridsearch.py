@@ -2,11 +2,11 @@ import numpy as np
 from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import SGDClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
-from utils import print_results
-
 from data.loaders import load_training_data, load_validation_data
+from utils import print_results
 
 # load training and validation data
 X_train, y_train = load_training_data()
@@ -25,9 +25,17 @@ text_clf = Pipeline([
         tol=None,
     ))
 ])
-text_clf.fit(X_train, y_train)
-predictions = text_clf.predict(X_val)
 
+# use grid search to find optimal params for the model
+gs_clf = GridSearchCV(text_clf, {
+    'vect__ngram_range': [(1, 1), (1, 2)],
+    'tfidf__use_idf': (True, False),
+    'clf__alpha': (1e-2, 1e-3),
+}, n_jobs=-1)
+gs_clf.fit(X_train, y_train)
+
+# predict!
+predictions = gs_clf.predict(X_val)
 print_results(predictions, y_val)
-print(metrics.classification_report(y_val, predictions))
-print(metrics.confusion_matrix(y_val, predictions))
+print(f'best score:  {gs_clf.best_score_}')
+print(f'best params: {gs_clf.best_params_}')

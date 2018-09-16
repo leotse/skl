@@ -3,6 +3,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 
 from data.loaders import load_training_data, load_validation_data
+from utils import print_results
 
 # load training and validation data
 X_train, y_train = load_training_data()
@@ -25,6 +26,4 @@ X_val_tfidf = tfidf_transformer.transform(X_val_counts)
 clf = MultinomialNB().fit(X_train_tfidf, y_train)
 predictions = clf.predict(X_val_tfidf)
 
-for prediction, actual in zip(predictions, y_val):
-    print(f"{prediction == actual}\t{(prediction, actual)}")
-print(f"accuracy: {np.mean(predictions == y_val)}")
+print_results(predictions, y_val)
