@@ -6,7 +6,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
 from data.loaders import load_training_data, load_validation_data
-from utils import print_results
+from utils import print_report
 
 # load training and validation data
 X_train, y_train = load_training_data()
@@ -36,6 +36,6 @@ gs_clf.fit(X_train, y_train)
 
 # predict!
 predictions = gs_clf.predict(X_val)
-print_results(predictions, y_val)
+print_report(predictions, y_val)
 print(f'best score:  {gs_clf.best_score_}')
 print(f'best params: {gs_clf.best_params_}')

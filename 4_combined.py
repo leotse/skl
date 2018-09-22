@@ -2,10 +2,11 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import SGDClassifier
+from sklearn.metrics import classification_report
 from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from utils import print_results
+from utils import print_report
 
 
 class FeatureSelector(BaseEstimator, TransformerMixin):
@@ -67,5 +68,16 @@ pipeline = Pipeline([
 ])
 
 clf = pipeline.fit(X_train, y_train)
+
+# training data accuracy
+print('=== training error ===')
+predictions = clf.predict(X_train)
+print_report(predictions, y_train)
+
+# validation data accuracy
+print('=== validation error ===')
 predictions = clf.predict(X_val)
-print_results(predictions, y_val)
+print_report(predictions, y_val)
+
+# classification report
+print(classification_report(y_val, predictions))
