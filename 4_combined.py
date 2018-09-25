@@ -1,5 +1,4 @@
 import pandas as pd
-from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import SGDClassifier
@@ -9,22 +8,8 @@ from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
+from features import FeatureSelector
 from utils import print_report
-
-
-class FeatureSelector(BaseEstimator, TransformerMixin):
-    def __init__(self, key, wrap=False):
-        self.key = key
-        self.wrap = wrap
-
-    def fit(self, x, y=None):
-        return self
-
-    def transform(self, df):
-        series = df.loc[:, self.key]
-        if self.wrap:
-            return pd.DataFrame(series)
-        return series
 
 
 # load training and validation data
